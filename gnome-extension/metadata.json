@@ -1,0 +1,7 @@
+{
+  "uuid": "ilinuxstats@local",
+  "name": "iLinux Stats",
+  "description": "CPU et mémoire en direct dans la barre supérieure GNOME, avec un menu de détails.",
+  "shell-version": ["48"],
+  "version": 1
+}
