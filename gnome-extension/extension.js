@@ -41,6 +41,9 @@ export default class ILinuxStatsExtension extends Extension {
         this._indicator = new PanelMenu.Button(0.0, 'iLinux Stats', false);
         this._panelBox = new St.BoxLayout({style_class: 'ilinuxstats-panel-box', y_align: 2});
         this._indicator.add_child(this._panelBox);
+        // Register the indicator before populating its popup. GNOME Shell must
+        // have the button actor attached before menu items/submenus are built.
+        Main.panel.addToStatusArea(this.uuid, this._indicator, 1, 'right');
 
         this._cpuItem = new PopupMenu.PopupMenuItem('CPU : lecture…');
         this._memItem = new PopupMenu.PopupMenuItem('Mémoire : lecture…');
@@ -83,7 +86,6 @@ export default class ILinuxStatsExtension extends Extension {
         this._openItem = openItem;
         this._indicator.menu.addMenuItem(openItem);
 
-        Main.panel.addToStatusArea(this.uuid, this._indicator, 1, 'right');
         this._applyMenuLanguage();
         this._startServer();
         this._loadSettings();
