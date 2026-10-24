@@ -2,6 +2,10 @@
 
 A local Linux system monitor inspired by macOS menu-bar utilities. It provides a live dashboard and an optional GNOME Shell top-bar indicator. Both the dashboard and the GNOME menu are translated into English, French, Spanish, Simplified Chinese, and Japanese. English is the default; each interface has its own language selector.
 
+![iLinux Stats dashboard with live widgets in the GNOME top bar](screenshots/cap1.png)
+
+*Screenshot: live system dashboard and GNOME top-bar widgets.*
+
 ## Features
 
 - Live CPU load, core count, frequency, and short-term graph.
@@ -97,6 +101,10 @@ Then open `http://127.0.0.1:8765`. The application is plain HTML/CSS/JavaScript 
 # iLinux Stats (français)
 
 Moniteur système local pour Linux, inspiré des utilitaires de barre de menus de macOS. Il comprend un tableau de bord en direct et un indicateur optionnel dans la barre supérieure de GNOME. Le tableau de bord et le menu GNOME sont traduits en anglais, français, espagnol, chinois simplifié et japonais. L’anglais est la langue par défaut; chaque interface possède son propre sélecteur.
+
+![Tableau de bord iLinux Stats avec les widgets en direct dans la barre supérieure de GNOME](screenshots/cap1.png)
+
+*Capture : tableau de bord système en direct et widgets dans la barre supérieure de GNOME.*
 
 ## Fonctionnalités
 
