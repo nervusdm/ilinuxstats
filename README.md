@@ -35,7 +35,13 @@ On another distribution, install Python 3, `psutil`, `curl`, `xdg-utils`, and (f
 
 ## Install and run
 
-The installer works in the current user's account and does not require `sudo`:
+The quick install downloads the latest published source and installs it in your user account. First install the prerequisites listed above, then run:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nervusdm/ilinuxstats/main/install-curl.sh | bash
+```
+
+The installer does not require `sudo`. You can inspect [the install script](https://github.com/nervusdm/ilinuxstats/blob/main/install-curl.sh) before running it. If you already cloned the repository, use the local installer instead:
 
 ```bash
 ./install.sh
@@ -125,7 +131,13 @@ Sur une autre distribution, installez Python 3, `psutil`, `curl`, `xdg-utils` et
 
 ## Installation et lancement
 
-L’installation se fait dans le compte utilisateur courant, sans `sudo` :
+Après avoir installé les prérequis indiqués plus haut, la commande rapide télécharge la dernière version publiée et l’installe dans votre compte utilisateur :
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nervusdm/ilinuxstats/main/install-curl.sh | bash
+```
+
+Elle ne demande pas `sudo`. Vous pouvez [consulter le script d’installation](https://github.com/nervusdm/ilinuxstats/blob/main/install-curl.sh) avant de l’exécuter. Si vous avez déjà cloné le dépôt, lancez plutôt le script local :
 
 ```bash
 ./install.sh
