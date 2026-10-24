@@ -361,6 +361,10 @@ export default class ILinuxStatsExtension extends Extension {
             this._timer = null;
         }
         this._session?.abort();
+        // The collector is a child process owned by this extension. Stop it
+        // on disable so a re-enable cannot leave a stale, unmanaged server.
+        this._serverProcess?.force_exit();
+        this._serverProcess = null;
         this._indicator?.destroy();
         this._indicator = null;
         this._latest = null;
