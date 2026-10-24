@@ -1,6 +1,6 @@
 # iLinux Stats
 
-A local Linux system monitor inspired by macOS menu-bar utilities. It provides a live dashboard and an optional GNOME Shell top-bar indicator. Both the dashboard and the GNOME menu are translated into English, French, Spanish, Simplified Chinese, and Japanese. English is the default; each interface has its own language selector.
+Remember iStat Menus on Mac? It puts useful system stats right in the menu bar, so you can check CPU, memory, disks, and network activity at a glance. iLinux Stats brings that same idea to Linux: a live dashboard plus configurable widgets in the GNOME top bar. Choose which stats to display, adjust each widget's appearance, and optionally keep local history with automatic cleanup. The dashboard and GNOME menu are available in English, French, Spanish, Simplified Chinese, and Japanese; English is the default.
 
 ![iLinux Stats dashboard with live widgets in the GNOME top bar](screenshots/cap1.png)
 
@@ -100,7 +100,7 @@ Then open `http://127.0.0.1:8765`. The application is plain HTML/CSS/JavaScript 
 
 # iLinux Stats (français)
 
-Moniteur système local pour Linux, inspiré des utilitaires de barre de menus de macOS. Il comprend un tableau de bord en direct et un indicateur optionnel dans la barre supérieure de GNOME. Le tableau de bord et le menu GNOME sont traduits en anglais, français, espagnol, chinois simplifié et japonais. L’anglais est la langue par défaut; chaque interface possède son propre sélecteur.
+Vous vous souvenez d’iStat Menus sur Mac ? Ce logiciel affiche les statistiques utiles du système directement dans la barre des menus : processeur, mémoire, disques, réseau et bien plus, consultables d’un coup d’œil. iLinux Stats reprend cette idée sous Linux avec un tableau de bord en direct et des widgets configurables dans la barre supérieure de GNOME. Choisissez les statistiques à afficher, personnalisez l’apparence de chaque widget et, si vous le souhaitez, conservez un historique local avec purge automatique. Le tableau de bord et le menu GNOME sont disponibles en anglais, français, espagnol, chinois simplifié et japonais; l’anglais est la langue par défaut.
 
 ![Tableau de bord iLinux Stats avec les widgets en direct dans la barre supérieure de GNOME](screenshots/cap1.png)
 
