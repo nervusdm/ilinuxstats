@@ -48,6 +48,7 @@ def get_settings():
     with DB_LOCK, db() as con:
         values = dict(con.execute("SELECT key, value FROM settings"))
     return {"recording": values.get("recording", "false") == "true",
+            "menu_language": values.get("menu_language", "en"),
             "retention_days": int(values.get("retention_days", "30")),
             "record_interval": int(values.get("record_interval", "60")),
             "panel_widgets": json.loads(values.get("panel_widgets", '["cpu", "memory"]')),
@@ -61,6 +62,8 @@ def purge(days):
 
 def set_settings(incoming):
     current = get_settings()
+    if incoming.get("menu_language") in LOCALES:
+        current["menu_language"] = incoming["menu_language"]
     if "recording" in incoming:
         current["recording"] = bool(incoming["recording"])
     if "retention_days" in incoming:
@@ -85,6 +88,7 @@ def set_settings(incoming):
             ("recording", str(current["recording"]).lower()),
             ("retention_days", str(current["retention_days"])),
             ("record_interval", str(current["record_interval"])),
+            ("menu_language", current["menu_language"]),
             ("panel_widgets", json.dumps(current["panel_widgets"])),
             ("panel_config", json.dumps(current["panel_config"]))])
     purge(current["retention_days"])

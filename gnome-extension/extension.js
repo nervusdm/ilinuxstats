@@ -16,6 +16,12 @@ const ITEMS = [
     ['disk', 'Stockage', '▰'], ['network', 'Réseau', '⇅'],
     ['uptime', 'Temps de fonctionnement', '◷'],
 ];
+Object.assign(MENU_TEXT.en, {language: 'Language'});
+Object.assign(MENU_TEXT.fr, {language: 'Langue'});
+Object.assign(MENU_TEXT.es, {language: 'Idioma'});
+Object.assign(MENU_TEXT.zh, {language: '语言'});
+Object.assign(MENU_TEXT.ja, {language: '言語'});
+const LANGUAGES = [['en', 'English'], ['fr', 'Français'], ['es', 'Español'], ['zh', '中文'], ['ja', '日本語']];
 const DEFAULT_CONFIG = Object.fromEntries(ITEMS.map(([key]) => [key, {mode: 'value', color: 'auto'}]));
 const MODES = ['value', 'compact', 'graph'];
 const COLORS = ['auto', 'green', 'cyan', 'orange', 'white'];
@@ -23,12 +29,14 @@ const COLORS = ['auto', 'green', 'cyan', 'orange', 'white'];
 export default class ILinuxStatsExtension extends Extension {
     enable() {
         this._session = new Soup.Session();
-        const locale = GLib.get_language_names().map(name => name.slice(0, 2).toLowerCase());
-        this._language = locale.find(name => MENU_TEXT[name]) ?? 'en';
+        this._language = 'en';
         this._widgets = ['cpu', 'memory'];
         this._panelConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
         this._history = Object.fromEntries(ITEMS.map(([key]) => [key, []]));
         this._panelLabels = {};
+        this._groups = {};
+        this._menuLanguageItems = {};
+        this._menuTitles = {};
         this._loadingSettings = false;
         this._indicator = new PanelMenu.Button(0.0, 'iLinux Stats', false);
         this._panelBox = new St.BoxLayout({style_class: 'ilinuxstats-panel-box', y_align: 2});
@@ -42,12 +50,28 @@ export default class ILinuxStatsExtension extends Extension {
 
         const configTitle = new PopupMenu.PopupMenuItem(this._t('configure'));
         configTitle.setSensitive(false);
+        this._configTitle = configTitle;
         this._indicator.menu.addMenuItem(configTitle);
+        const languageGroup = new PopupMenu.PopupSubMenuMenuItem(this._t('language'), true);
+        this._indicator.menu.addMenuItem(languageGroup);
+        this._languageGroup = languageGroup;
+        for (const [code, label] of LANGUAGES) {
+            const option = new PopupMenu.PopupMenuItem(label);
+            option.connect('activate', () => {
+                this._language = code;
+                this._applyMenuLanguage();
+                this._savePanelConfig();
+            });
+            languageGroup.menu.addMenuItem(option);
+            this._menuLanguageItems[code] = option;
+        }
+        this._indicator.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
         this._switches = {};
         this._buildWidgetSubmenus();
         this._indicator.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
         const detailTitle = new PopupMenu.PopupMenuItem(this._t('details'));
         detailTitle.setSensitive(false);
+        this._detailTitle = detailTitle;
         this._indicator.menu.addMenuItem(detailTitle);
         for (const item of [this._cpuItem, this._memItem, this._diskItem, this._networkItem, this._uptimeItem]) {
             item.setSensitive(false);
@@ -56,9 +80,11 @@ export default class ILinuxStatsExtension extends Extension {
         this._indicator.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
         const openItem = new PopupMenu.PopupMenuItem(this._t('open'));
         openItem.connect('activate', () => Gio.AppInfo.launch_default_for_uri(DASHBOARD, null));
+        this._openItem = openItem;
         this._indicator.menu.addMenuItem(openItem);
 
         Main.panel.addToStatusArea(this.uuid, this._indicator, 1, 'right');
+        this._applyMenuLanguage();
         this._startServer();
         this._loadSettings();
         this._refresh();
@@ -71,6 +97,7 @@ export default class ILinuxStatsExtension extends Extension {
     _buildWidgetSubmenus() {
         for (const [key, title, icon] of ITEMS) {
             const group = new PopupMenu.PopupSubMenuMenuItem(`${icon}  ${this._t(key)}`, true);
+            this._groups[key] = {group, icon};
             // Attach the submenu before adding child entries. GNOME Shell needs
             // its parent actor to exist while PopupMenu creates child actors.
             this._indicator.menu.addMenuItem(group);
@@ -86,6 +113,7 @@ export default class ILinuxStatsExtension extends Extension {
             this._switches[key] = visible;
 
             const formatTitle = new PopupMenu.PopupMenuItem(this._t('format'));
+            this._menuTitles[`format_${key}`] = formatTitle;
             formatTitle.setSensitive(false);
             group.menu.addMenuItem(formatTitle);
             this._modeItems ??= {};
@@ -103,6 +131,7 @@ export default class ILinuxStatsExtension extends Extension {
             }
 
             const colorTitle = new PopupMenu.PopupMenuItem(this._t('color'));
+            this._menuTitles[`color_${key}`] = colorTitle;
             colorTitle.setSensitive(false);
             group.menu.addMenuItem(colorTitle);
             this._colorItems ??= {};
@@ -120,10 +149,13 @@ export default class ILinuxStatsExtension extends Extension {
             }
 
             const orderTitle = new PopupMenu.PopupMenuItem(this._t('position'));
+            this._menuTitles[`position_${key}`] = orderTitle;
             orderTitle.setSensitive(false);
             group.menu.addMenuItem(orderTitle);
             const moveUp = new PopupMenu.PopupMenuItem(this._t('left'));
             const moveDown = new PopupMenu.PopupMenuItem(this._t('right'));
+            this._menuTitles[`left_${key}`] = moveUp;
+            this._menuTitles[`right_${key}`] = moveDown;
             moveUp.connect('activate', () => this._moveWidget(key, -1));
             moveDown.connect('activate', () => this._moveWidget(key, 1));
             group.menu.addMenuItem(moveUp);
@@ -137,6 +169,26 @@ export default class ILinuxStatsExtension extends Extension {
             item.label.text = `${config.mode === mode ? '✓  ' : '    '}${this._t(`mode_${mode}`)}`;
         for (const [color, item] of Object.entries(this._colorItems[key]))
             item.label.text = `${config.color === color ? '✓  ' : '    '}${this._t(`color_${color}`)}`;
+    }
+
+    _applyMenuLanguage() {
+        this._configTitle.label.text = this._t('configure');
+        this._languageGroup.label.text = this._t('language');
+        this._detailTitle.label.text = this._t('details');
+        this._openItem.label.text = this._t('open');
+        for (const [code, label] of LANGUAGES)
+            this._menuLanguageItems[code].label.text = `${this._language === code ? '✓  ' : '    '}${label}`;
+        for (const [key, {group, icon}] of Object.entries(this._groups)) {
+            group.label.text = `${icon}  ${this._t(key)}`;
+            this._switches[key].label.text = this._t('show');
+            this._menuTitles[`format_${key}`].label.text = this._t('format');
+            this._menuTitles[`color_${key}`].label.text = this._t('color');
+            this._menuTitles[`position_${key}`].label.text = this._t('position');
+            this._menuTitles[`left_${key}`].label.text = this._t('left');
+            this._menuTitles[`right_${key}`].label.text = this._t('right');
+            this._updateOptionChecks(key);
+        }
+        this._refresh();
     }
 
     _moveWidget(key, direction) {
@@ -158,6 +210,10 @@ export default class ILinuxStatsExtension extends Extension {
             try {
                 const bytes = session.send_and_read_finish(result);
                 const settings = JSON.parse(new TextDecoder().decode(bytes.get_data()));
+                if (MENU_TEXT[settings.menu_language]) {
+                    this._language = settings.menu_language;
+                    this._applyMenuLanguage();
+                }
                 this._widgets = settings.panel_widgets ?? ['cpu', 'memory'];
                 this._panelConfig = {...JSON.parse(JSON.stringify(DEFAULT_CONFIG)), ...(settings.panel_config ?? {})};
                 for (const key of Object.keys(DEFAULT_CONFIG))
@@ -180,6 +236,7 @@ export default class ILinuxStatsExtension extends Extension {
         message.set_request_body_from_bytes('application/json', GLib.Bytes.new(JSON.stringify({
             panel_widgets: this._widgets,
             panel_config: this._panelConfig,
+            menu_language: this._language,
         })));
         this._session.send_and_read_async(message, GLib.PRIORITY_DEFAULT, null, (session, result) => {
             try { session.send_and_read_finish(result); } catch (_e) {}

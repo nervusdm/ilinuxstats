@@ -1,6 +1,6 @@
 # iLinux Stats
 
-A local Linux system monitor inspired by macOS menu-bar utilities. It provides a live dashboard and an optional GNOME Shell top-bar indicator. The dashboard is translated into English, French, Spanish, Simplified Chinese, and Japanese; the GNOME menu follows the desktop language when available.
+A local Linux system monitor inspired by macOS menu-bar utilities. It provides a live dashboard and an optional GNOME Shell top-bar indicator. Both the dashboard and the GNOME menu are translated into English, French, Spanish, Simplified Chinese, and Japanese. English is the default; each interface has its own language selector.
 
 ## Features
 
@@ -57,7 +57,7 @@ The dashboard is served only on `http://127.0.0.1:8765`. To run the collector wi
 
 ## Language and configuration
 
-Use the language selector in the dashboard header to choose English, French, Spanish, Simplified Chinese, or Japanese. The selection is remembered in that browser. The GNOME menu uses the current desktop language when it is one of those five languages.
+Use the language selector in the dashboard header to choose English, French, Spanish, Simplified Chinese, or Japanese. English is used by default, and your choice is remembered in that browser. To change the GNOME widget menu, click the iLinux Stats indicator in the top bar, open **Language** (or **Langue**) near the top, and select a language. The menu choice is saved on this computer and is independent of the dashboard and desktop language.
 
 Open the gear button to show or hide dashboard modules, change refresh and display settings, and enable history. History collection is off by default. When enabled, choose a 10-second, 30-second, 1-minute, or 5-minute interval and a retention period from 1 to 365 days. Old samples are deleted automatically. The history chart can show the last 6 hours, 24 hours, 7 days, or 30 days.
 
@@ -96,7 +96,7 @@ Then open `http://127.0.0.1:8765`. The application is plain HTML/CSS/JavaScript 
 
 # iLinux Stats (français)
 
-Moniteur système local pour Linux, inspiré des utilitaires de barre de menus de macOS. Il comprend un tableau de bord en direct et un indicateur optionnel dans la barre supérieure de GNOME. Le tableau de bord est traduit en anglais, français, espagnol, chinois simplifié et japonais; le menu GNOME suit la langue du bureau si elle est prise en charge.
+Moniteur système local pour Linux, inspiré des utilitaires de barre de menus de macOS. Il comprend un tableau de bord en direct et un indicateur optionnel dans la barre supérieure de GNOME. Le tableau de bord et le menu GNOME sont traduits en anglais, français, espagnol, chinois simplifié et japonais. L’anglais est la langue par défaut; chaque interface possède son propre sélecteur.
 
 ## Fonctionnalités
 
@@ -153,7 +153,7 @@ Le serveur écoute uniquement sur `http://127.0.0.1:8765`. Pour lancer le collec
 
 ## Langue et configuration
 
-Le sélecteur dans l’en-tête permet de choisir l’anglais, le français, l’espagnol, le chinois simplifié ou le japonais. Le choix est mémorisé dans le navigateur. Le menu GNOME suit la langue du bureau quand elle fait partie de ces cinq langues.
+Le sélecteur dans l’en-tête permet de choisir l’anglais, le français, l’espagnol, le chinois simplifié ou le japonais. L’anglais est utilisé par défaut et le choix est mémorisé dans le navigateur. Pour changer la langue du widget GNOME, cliquez sur iLinux Stats dans la barre supérieure, ouvrez **Langue** près du haut du menu, puis sélectionnez une langue. Ce choix est mémorisé sur cet ordinateur et est indépendant de la langue du tableau de bord et du bureau.
 
 Le bouton ⚙ permet d’afficher ou masquer les blocs, de régler le rafraîchissement et la présentation, et d’activer l’historique. L’enregistrement est désactivé par défaut. Une fois activé, choisissez une cadence de 10 s, 30 s, 1 min ou 5 min et une conservation de 1 à 365 jours. Les mesures expirées sont purgées automatiquement. Le graphique affiche les 6 dernières heures, 24 heures, 7 jours ou 30 jours.
 
